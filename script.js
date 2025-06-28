@@ -21,22 +21,38 @@ const coinPanel = document.createElement("div");
 coinPanel.id = "coinPanel";
 coinPanel.style.margin = "20px auto";
 coinPanel.style.textAlign = "center";
+coinPanel.style.width = "max-content";
+coinPanel.style.minWidth = "700px"; // You can adjust this value as needed
+coinPanel.style.padding = "16px 24px";
+coinPanel.style.borderRadius = "12px";
+coinPanel.style.boxShadow = "0 2px 12px #D7B99233";
+coinPanel.style.background = "#FFF";
 coinPanel.innerHTML = `
   <div style="font-size:18px;margin-bottom:8px;">
     🪙 Coins: <span id="coinCount">0</span>
   </div>
-  <button class="btn btn-warning m-1" id="buyPower">+10 Tower Power (10 coins)</button>
-  <button class="btn btn-warning m-1" id="buyPower10">+100 Tower Power (100 coins)</button>
-  <button class="btn btn-warning m-1" id="buyPower100">+1000 Tower Power (1000 coins)</button>
-  <button class="btn btn-info m-1" id="buyRange">+10 Tower Range (10 coins)</button>
-  <button class="btn btn-info m-1" id="buyRange10">+100 Tower Range (100 coins)</button>
-  <button class="btn btn-info m-1" id="buyRange100">+1000 Tower Range (1000 coins)</button>
-  <button class="btn btn-success m-1" id="buySpeed">+0.2 Tower Speed (10 coins)</button>
-  <button class="btn btn-success m-1" id="buySpeed10">+2 Tower Speed (100 coins)</button>
-  <button class="btn btn-success m-1" id="buySpeed100">+20 Tower Speed (1000 coins)</button>
-  <button class="btn btn-secondary m-1" id="buyHealth">+20 Tower Health (10 coins)</button>
-  <button class="btn btn-secondary m-1" id="buyHealth10">+200 Tower Health (100 coins)</button>
-  <button class="btn btn-secondary m-1" id="buyHealth100">+2000 Tower Health (1000 coins)</button>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px 0;">
+    <div style="display:flex;gap:8px;margin-bottom:6px;">
+      <button class="btn btn-warning" id="buyPower">+10 Tower Power (10 coins)</button>
+      <button class="btn btn-warning" id="buyPower10">+100 Tower Power (100 coins)</button>
+      <button class="btn btn-warning" id="buyPower100">+1000 Tower Power (1000 coins)</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:6px;">
+      <button class="btn btn-info" id="buyRange">+10 Tower Range (10 coins)</button>
+      <button class="btn btn-info" id="buyRange10">+100 Tower Range (100 coins)</button>
+      <button class="btn btn-info" id="buyRange100">+1000 Tower Range (1000 coins)</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:6px;">
+      <button class="btn btn-success" id="buySpeed">+0.2 Tower Speed (10 coins)</button>
+      <button class="btn btn-success" id="buySpeed10">+2 Tower Speed (100 coins)</button>
+      <button class="btn btn-success" id="buySpeed100">+20 Tower Speed (1000 coins)</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:6px;">
+      <button class="btn btn-secondary" id="buyHealth">+20 Tower Health (10 coins)</button>
+      <button class="btn btn-secondary" id="buyHealth10">+200 Tower Health (100 coins)</button>
+      <button class="btn btn-secondary" id="buyHealth100">+2000 Tower Health (1000 coins)</button>
+    </div>
+  </div>
   <hr>
 `;
 document.body.appendChild(coinPanel);
@@ -253,7 +269,130 @@ function attachTooltipFollow(div, getHTML) {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
-// --- Utility to create/update an HP bar ---
+// --- Charity: water brand palette from your image ---
+const palette = {
+  red: "#F94F5E",
+  yellow: "#FFDA48",
+  teal: "#3FBFBB",
+  lightBlue: "#A5DCE0",
+  darkBlue: "#28403F",
+  beige: "#F3CC98"
+};
+
+// --- Apply palette and contrast to UI ---
+const style = document.createElement("style");
+style.innerHTML = `
+  body {
+    background: ${palette.beige} !important;
+    color: ${palette.darkBlue} !important;
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+  }
+  #coinPanel {
+    background: ${palette.lightBlue} !important;
+    color: ${palette.darkBlue} !important;
+    border-radius: 14px !important;
+    box-shadow: 0 2px 12px ${palette.teal}33;
+    border: 3px solid ${palette.teal};
+    min-width: 700px;
+    width: max-content;
+    margin: 20px auto;
+    padding: 16px 24px;
+  }
+  .btn {
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    border: 2px solid ${palette.darkBlue} !important;
+    box-shadow: 0 2px 8px ${palette.beige}55;
+    transition: background 0.2s, color 0.2s;
+    margin: 0 2px;
+  }
+  .btn-warning {
+    background: ${palette.yellow} !important;
+    color: ${palette.darkBlue} !important;
+  }
+  .btn-info {
+    background: ${palette.teal} !important;
+    color: ${palette.darkBlue} !important;
+  }
+  .btn-success {
+    background: ${palette.lightBlue} !important;
+    color: ${palette.darkBlue} !important;
+  }
+  .btn-secondary {
+    background: ${palette.beige} !important;
+    color: ${palette.darkBlue} !important;
+  }
+  .btn-danger {
+    background: ${palette.red} !important;
+    color: #fff !important;
+    border: 2px solid ${palette.darkBlue} !important;
+  }
+  .btn:focus, #difficultySelect:focus {
+    outline: 3px solid ${palette.yellow};
+    outline-offset: 2px;
+  }
+  .hp-bar {
+    background: ${palette.lightBlue} !important;
+    border-radius: 3px !important;
+  }
+  .hp-bar-fill {
+    background: ${palette.darkBlue} !important;
+    transition: background 0.3s;
+  }
+  .can, .mud {
+    border-radius: 50%;
+    border: 2px solid ${palette.yellow};
+    background: #FFF !important;
+  }
+  .can:hover { filter: brightness(1.2) drop-shadow(0 0 8px ${palette.yellow}); }
+  .mud:hover { filter: brightness(0.8) drop-shadow(0 0 8px ${palette.beige}); }
+  .pollutant-tooltip {
+    background: ${palette.yellow} !important;
+    color: ${palette.darkBlue} !important;
+    border: 1px solid ${palette.darkBlue} !important;
+    border-radius: 6px !important;
+    padding: 6px 10px !important;
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-size: 1rem !important;
+    box-shadow: 0 2px 8px ${palette.teal}44;
+  }
+  footer {
+    background: ${palette.lightBlue} !important;
+    color: ${palette.darkBlue} !important;
+    border-top: 2px solid ${palette.yellow} !important;
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+  }
+  footer a {
+    color: ${palette.red} !important;
+    background: ${palette.yellow} !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+    border-radius: 4px !important;
+    padding: 2px 8px !important;
+    transition: background 0.2s, color 0.2s;
+  }
+  footer a:hover {
+    background: ${palette.red} !important;
+    color: ${palette.yellow} !important;
+    text-decoration: none !important;
+  }
+  .title, h1, h2, h3 {
+    color: ${palette.darkBlue} !important;
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-weight: bold !important;
+  }
+  .mission-highlight {
+    color: ${palette.darkBlue} !important;
+    background: ${palette.yellow} !important;
+    padding: 0 4px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+`;
+document.head.appendChild(style);
+
+// --- Update HP bar color dynamically for contrast ---
 function setHpBar(parentDiv, hp, maxHp) {
   let bar = parentDiv.querySelector('.hp-bar');
   if (!bar) {
@@ -264,13 +403,12 @@ function setHpBar(parentDiv, hp, maxHp) {
     bar.style.bottom = '-8px';
     bar.style.width = '100%';
     bar.style.height = '6px';
-    bar.style.background = '#eee';
+    bar.style.background = palette.lightBlue;
     bar.style.borderRadius = '3px';
     bar.style.overflow = 'hidden';
     let fill = document.createElement('div');
     fill.className = 'hp-bar-fill';
     fill.style.height = '100%';
-    fill.style.background = '#4caf50';
     fill.style.width = '100%';
     bar.appendChild(fill);
     parentDiv.appendChild(bar);
@@ -278,7 +416,14 @@ function setHpBar(parentDiv, hp, maxHp) {
   let fill = bar.querySelector('.hp-bar-fill');
   let percent = Math.max(0, Math.min(1, hp / maxHp));
   fill.style.width = (percent * 100) + '%';
-  fill.style.background = percent > 0.5 ? '#4caf50' : (percent > 0.2 ? '#ffc107' : '#f44336');
+  // Color logic: full = darkBlue, mid = yellow, low = red
+  if (percent > 0.5) {
+    fill.style.background = palette.darkBlue;
+  } else if (percent > 0.2) {
+    fill.style.background = palette.yellow;
+  } else {
+    fill.style.background = palette.red;
+  }
 }
 
 // --- Create Community ---
@@ -795,8 +940,8 @@ footer.innerHTML = `
 document.body.appendChild(footer);
 
 // --- Improve button and panel contrast globally ---
-const style = document.createElement("style");
-style.innerHTML = `
+const style2 = document.createElement("style");
+style2.innerHTML = `
   body {
     background: #F8F6DF !important;
     color: #28403F !important; /* Use dark blue-green for best contrast */
@@ -895,13 +1040,10 @@ style.innerHTML = `
     font-weight: bold;
   }
 `;
-document.head.appendChild(style);
-
-// Update mission statement for better contrast
-mission.innerHTML = `<span class="mission-highlight">Every drop counts!</span> <span style="color:#28403F;">Help keep communities safe and clean.</span>`;
+document.head.appendChild(style2);
 
 // --- Charity: water brand colors and styles ---
-const palette = {
+const palette2 = {
   yellow: "#FFDA48",
   darkBlue: "#003366",
   lightBlue: "#A5DCE0",
