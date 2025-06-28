@@ -1114,3 +1114,67 @@ self.addEventListener('fetch', event => {
     })
   );
 });
+
+// --- Milestone Messages ---
+const milestoneMessages = [
+  "Great job! 10 points reached!",
+  "Amazing! 100 points!",
+  "Incredible! 1,000 points!",
+  "Unstoppable! 10,000 points!",
+  "Legendary! 100,000 points!",
+  "Godlike! 1,000,000 points!"
+];
+let nextMilestoneIndex = 0;
+
+// --- Milestone popup function ---
+function showMilestoneMessage(msg) {
+  const milestoneDiv = document.createElement("div");
+  milestoneDiv.textContent = msg;
+  milestoneDiv.style.position = "fixed";
+  milestoneDiv.style.left = "50%";
+  milestoneDiv.style.top = "20%";
+  milestoneDiv.style.transform = "translate(-50%, -50%) scale(0.7)";
+  milestoneDiv.style.background = "#FFDA48";
+  milestoneDiv.style.color = "#28403F";
+  milestoneDiv.style.fontWeight = "bold";
+  milestoneDiv.style.fontSize = "2rem";
+  milestoneDiv.style.padding = "18px 36px";
+  milestoneDiv.style.borderRadius = "12px";
+  milestoneDiv.style.boxShadow = "0 4px 24px #28403F55";
+  milestoneDiv.style.zIndex = "99999";
+  milestoneDiv.style.opacity = "0";
+  milestoneDiv.style.transition = "opacity 0.4s, transform 0.4s";
+  document.body.appendChild(milestoneDiv);
+
+  // Animate in (pop and fade in)
+  setTimeout(() => {
+    milestoneDiv.style.opacity = "0.95";
+    milestoneDiv.style.transform = "translate(-50%, -50%) scale(1.1)";
+  }, 10);
+
+  // Animate out (fade and shrink)
+  setTimeout(() => {
+    milestoneDiv.style.opacity = "0";
+    milestoneDiv.style.transform = "translate(-50%, -50%) scale(0.7)";
+  }, 1800);
+
+  setTimeout(() => { milestoneDiv.remove(); }, 2200);
+}
+
+// --- Track and display milestones in updateGame ---
+let lastMilestoneScore = 0;
+
+function checkMilestone(score) {
+  // Show a message every time the score increases by a factor of 10 (10, 100, 1000, etc.)
+  if (score >= 10 && score >= lastMilestoneScore * 10) {
+    // Find the right message for the milestone
+    let idx = Math.floor(Math.log10(score)) - 1;
+    if (idx >= milestoneMessages.length) idx = milestoneMessages.length - 1;
+    showMilestoneMessage(milestoneMessages[idx]);
+    lastMilestoneScore = score;
+  }
+}
+
+// --- In your updateGame function, after updating the score: ---
+scoreDisplay.innerText = score;
+checkMilestone(score);
