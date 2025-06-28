@@ -298,96 +298,36 @@ style.innerHTML = `
     margin: 20px auto;
     padding: 16px 24px;
   }
-  .btn {
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
-    font-weight: bold !important;
-    border-radius: 8px !important;
-    border: 2px solid ${palette.darkBlue} !important;
-    box-shadow: 0 2px 8px ${palette.beige}55;
-    transition: background 0.2s, color 0.2s;
-    margin: 0 2px;
-  }
+  /* Upgrade buttons: use palette.yellow, palette.teal, palette.red, palette.beige for contrast */
   .btn-warning {
     background: ${palette.yellow} !important;
     color: ${palette.darkBlue} !important;
   }
-  .btn-info {
+  /* Make tower range button a unique color (teal) */
+  #buyRange, #buyRange10, #buyRange100 {
     background: ${palette.teal} !important;
+    color: ${palette.darkBlue} !important;
+    border: 2px solid ${palette.darkBlue} !important;
+  }
+  .btn-info {
+    background: ${palette.lightBlue} !important;
     color: ${palette.darkBlue} !important;
   }
   .btn-success {
-    background: ${palette.lightBlue} !important;
-    color: ${palette.darkBlue} !important;
+    background: ${palette.red} !important;
+    color: #fff !important;
   }
   .btn-secondary {
     background: ${palette.beige} !important;
     color: ${palette.darkBlue} !important;
   }
-  .btn-danger {
-    background: ${palette.red} !important;
-    color: #fff !important;
+  .btn, .btn-warning, .btn-info, .btn-success, .btn-secondary {
     border: 2px solid ${palette.darkBlue} !important;
-  }
-  .btn:focus, #difficultySelect:focus {
-    outline: 3px solid ${palette.yellow};
-    outline-offset: 2px;
-  }
-  .hp-bar {
-    background: ${palette.lightBlue} !important;
-    border-radius: 3px !important;
-  }
-  .hp-bar-fill {
-    background: ${palette.darkBlue} !important;
-    transition: background 0.3s;
-  }
-  .can, .mud {
-    border-radius: 50%;
-    border: 2px solid ${palette.yellow};
-    background: #FFF !important;
-  }
-  .can:hover { filter: brightness(1.2) drop-shadow(0 0 8px ${palette.yellow}); }
-  .mud:hover { filter: brightness(0.8) drop-shadow(0 0 8px ${palette.beige}); }
-  .pollutant-tooltip {
-    background: ${palette.yellow} !important;
-    color: ${palette.darkBlue} !important;
-    border: 1px solid ${palette.darkBlue} !important;
-    border-radius: 6px !important;
-    padding: 6px 10px !important;
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
-    font-size: 1rem !important;
-    box-shadow: 0 2px 8px ${palette.teal}44;
-  }
-  footer {
-    background: ${palette.lightBlue} !important;
-    color: ${palette.darkBlue} !important;
-    border-top: 2px solid ${palette.yellow} !important;
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
-  }
-  footer a {
-    color: ${palette.red} !important;
-    background: ${palette.yellow} !important;
     font-weight: bold !important;
-    text-decoration: underline !important;
-    border-radius: 4px !important;
-    padding: 2px 8px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px ${palette.beige}55;
     transition: background 0.2s, color 0.2s;
-  }
-  footer a:hover {
-    background: ${palette.red} !important;
-    color: ${palette.yellow} !important;
-    text-decoration: none !important;
-  }
-  .title, h1, h2, h3 {
-    color: ${palette.darkBlue} !important;
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
-    font-weight: bold !important;
-  }
-  .mission-highlight {
-    color: ${palette.darkBlue} !important;
-    background: ${palette.yellow} !important;
-    padding: 0 4px;
-    border-radius: 3px;
-    font-weight: bold;
+    margin: 0 2px;
   }
 `;
 document.head.appendChild(style);
