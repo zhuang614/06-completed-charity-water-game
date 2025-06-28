@@ -799,79 +799,213 @@ const style = document.createElement("style");
 style.innerHTML = `
   body {
     background: #F8F6DF !important;
-    color: #003366 !important;
+    color: #28403F !important; /* Use dark blue-green for best contrast */
     font-family: 'Proxima Nova', Arial, sans-serif !important;
   }
   #coinPanel, .btn, #gameOver, #score, #level {
     font-family: 'Proxima Nova', Arial, sans-serif !important;
   }
   .btn {
-    color: #003366 !important;
-    background: #FFC907 !important;
-    border: 2px solid #003366 !important;
+    color: #28403F !important; /* Very dark text for best contrast */
+    background: #FFDA48 !important; /* Brand yellow */
+    border: 2px solid #28403F !important;
     font-weight: bold !important;
     border-radius: 8px !important;
     box-shadow: 0 2px 8px #D7B99222;
     transition: background 0.2s, color 0.2s;
   }
   .btn-danger {
-    background: #F5402C !important;
+    background: #F94F5E !important; /* Brand red */
     color: #FFF !important;
-    border: 2px solid #B49559 !important;
+    border: 2px solid #28403F !important;
   }
   .btn-success {
-    background: #4caf50 !important;
-    color: #FFF !important;
-    border: 2px solid #003366 !important;
+    background: #3FBFBB !important; /* Brand teal */
+    color: #28403F !important; /* Dark text for contrast */
+    border: 2px solid #28403F !important;
   }
   .btn-info {
-    background: #A6BDDA !important;
-    color: #003366 !important;
-    border: 2px solid #003366 !important;
+    background: #A5DCE0 !important; /* Light blue */
+    color: #28403F !important;
+    border: 2px solid #28403F !important;
   }
   .btn-secondary {
     background: #D7B992 !important;
-    color: #003366 !important;
-    border: 2px solid #003366 !important;
+    color: #28403F !important;
+    border: 2px solid #28403F !important;
   }
   .btn-warning {
-    background: #FFC907 !important;
-    color: #003366 !important;
-    border: 2px solid #003366 !important;
+    background: #FFDA48 !important;
+    color: #28403F !important;
+    border: 2px solid #28403F !important;
   }
   .can, .mud {
     border-radius: 50%;
-    border: 2px solid #FFC907;
+    border: 2px solid #FFDA48;
     background: #FFF !important;
   }
-  .can:hover { filter: brightness(1.2) drop-shadow(0 0 8px #FFC907); }
+  .can:hover { filter: brightness(1.2) drop-shadow(0 0 8px #FFDA48); }
   .mud:hover { filter: brightness(0.8) drop-shadow(0 0 8px #B49559); }
   .hp-bar {
     background: #D4D6C5 !important;
   }
   .hp-bar-fill {
-    background: #4caf50 !important;
+    background: #3FBFBB !important;
   }
   .pollutant-tooltip {
     background: #FFF !important;
-    color: #003366 !important;
-    border: 1px solid #FFC907 !important;
+    color: #28403F !important;
+    border: 1px solid #FFDA48 !important;
     border-radius: 6px !important;
     padding: 6px 10px !important;
     font-family: 'Proxima Nova', Arial, sans-serif !important;
     font-size: 1rem !important;
     box-shadow: 0 2px 8px #D7B99244;
   }
+  footer {
+    background: #F8F6DF !important;
+    color: #28403F !important;
+    border-top: 2px solid #FFDA48 !important;
+  }
   footer a {
     font-family: 'Proxima Nova', Arial, sans-serif !important;
     font-weight: bold !important;
     text-decoration: underline !important;
     border-radius: 4px !important;
+    color: #28403F !important;
+    background: #FFDA48 !important;
+    padding: 2px 8px !important;
+    transition: background 0.2s, color 0.2s;
   }
   footer a:hover {
-    background: #003366 !important;
-    color: #FFC907 !important;
+    background: #28403F !important;
+    color: #FFDA48 !important;
     text-decoration: none !important;
+  }
+  .title, h1, h2, h3 {
+    color: #28403F !important;
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-weight: bold !important;
+  }
+  .mission-highlight {
+    color: #28403F !important;
+    background: #FFDA48 !important;
+    padding: 0 4px;
+    border-radius: 3px;
+    font-weight: bold;
   }
 `;
 document.head.appendChild(style);
+
+// Update mission statement for better contrast
+mission.innerHTML = `<span class="mission-highlight">Every drop counts!</span> <span style="color:#28403F;">Help keep communities safe and clean.</span>`;
+
+// --- Charity: water brand colors and styles ---
+const palette = {
+  yellow: "#FFDA48",
+  darkBlue: "#003366",
+  lightBlue: "#A5DCE0",
+  teal: "#3FBFBB",
+  red: "#F94F5E",
+  beige: "#F8F6DF",
+  brown: "#D7B992",
+  green: "#4CAF50",
+  orange: "#FFC107",
+  purple: "#9C27B0",
+  pink: "#E91E63",
+  grey: "#9E9E9E",
+  black: "#000000",
+  white: "#FFFFFF"
+};
+
+// --- Accessibility improvements ---
+// 1. Ensure sufficient color contrast (already applied above)
+// 2. Add focus styles for keyboard navigation
+const focusStyle = document.createElement("style");
+focusStyle.innerHTML = `
+  .btn:focus, #difficultySelect:focus {
+    outline: 3px solid ${palette.yellow};
+    outline-offset: 2px;
+  }
+`;
+document.head.appendChild(focusStyle);
+
+// 3. Aria labels for important elements
+document.getElementById("gameArea").setAttribute("aria-label", "Game area where communities are protected from pollutants");
+document.getElementById("score").setAttribute("aria-label", "Current score: " + score);
+document.getElementById("communityCount").setAttribute("aria-label", "Current number of communities: " + communities.length);
+document.getElementById("level").setAttribute("aria-label", "Current level: " + level);
+startBtn.setAttribute("aria-label", "Start the game");
+speedBtn.setAttribute("aria-label", "Change game speed");
+document.querySelectorAll(".btn").forEach(btn => {
+  btn.setAttribute("role", "button");
+  btn.setAttribute("tabindex", "0");
+});
+
+// --- Announce.js integration for live score updates ---
+if (typeof Announce !== "undefined") {
+  const scoreAnnouncer = new Announce("score", { live: true });
+  scoreAnnouncer.text = () => `Score: ${score}`;
+  scoreAnnouncer.start();
+}
+
+// --- Service worker registration for PWA ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(registration => {
+      console.log('Service Worker registered with scope:', registration.scope);
+    }).catch(error => {
+      console.error('Service Worker registration failed:', error);
+    });
+  });
+}
+
+// --- Precaching important assets ---
+const CACHE_NAME = 'v1';
+const PRECACHE_URLS = [
+  'index.html',
+  'img/community.png',
+  'img/water-can-transparent.png',
+  'img/pollution.png',
+  'img/cw_logo.png',
+  'css/styles.css',
+  'js/scripts.js',
+  'https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@400;700&display=swap'
+];
+
+// --- Install service worker and cache assets ---
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      console.log('Caching app shell');
+      return cache.addAll(PRECACHE_URLS);
+    })
+  );
+});
+
+// --- Activate service worker and remove old caches ---
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.filter(cacheName => {
+          // Keep the current cache and any that start with "dynamic-"
+          return cacheName !== CACHE_NAME && cacheName.startsWith('dynamic-');
+        }).map(cacheName => {
+          console.log('Deleting old cache:', cacheName);
+          return caches.delete(cacheName);
+        })
+      );
+    })
+  );
+});
+
+// --- Fetch event to serve cached assets ---
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      // Serve from cache if available, otherwise fetch from network
+      return response || fetch(event.request);
+    })
+  );
+});
