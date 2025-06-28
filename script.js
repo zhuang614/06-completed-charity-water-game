@@ -773,6 +773,25 @@ function spawnCan() {
     scoreDisplay.innerText = score;
     can.style.boxShadow = "0 0 16px 4px #FFC907";
     can.style.backgroundColor = "#FFE066";
+    // Add a "+15" floating label when clicked
+    const plusLabel = document.createElement("div");
+    plusLabel.textContent = "+15";
+    plusLabel.style.position = "absolute";
+    plusLabel.style.left = can.style.left;
+    plusLabel.style.top = can.style.top;
+    plusLabel.style.color = "#FFC907";
+    plusLabel.style.fontWeight = "bold";
+    plusLabel.style.fontSize = "1.2rem";
+    plusLabel.style.pointerEvents = "none";
+    plusLabel.style.transition = "top 0.7s, opacity 0.7s";
+    plusLabel.style.opacity = "1";
+    gameArea.appendChild(plusLabel);
+    setTimeout(() => {
+      plusLabel.style.top = (parseInt(can.style.top) - 30) + "px";
+      plusLabel.style.opacity = "0";
+    }, 10);
+    setTimeout(() => { plusLabel.remove(); }, 700);
+
     setTimeout(() => { if (can.parentNode) can.parentNode.removeChild(can); }, 200);
     scoreDisplay.style.color = "#FFC907";
     setTimeout(() => { scoreDisplay.style.color = "#2E9DF7"; }, 300);
@@ -780,7 +799,6 @@ function spawnCan() {
 
   setTimeout(() => { if (can.parentNode) can.parentNode.removeChild(can); }, 7000);
 }
-setInterval(() => { if (gameActive) spawnCan(); }, 8000 + Math.random() * 7000);
 
 // --- Obstacle: "mud puddle" that reduces score ---
 function spawnMud() {
@@ -801,6 +819,25 @@ function spawnMud() {
     scoreDisplay.innerText = score;
     mud.style.boxShadow = "0 0 16px 4px #F5402C";
     mud.style.backgroundColor = "#F5402C";
+    // Add a "-10" floating label when clicked
+    const minusLabel = document.createElement("div");
+    minusLabel.textContent = "-10";
+    minusLabel.style.position = "absolute";
+    minusLabel.style.left = mud.style.left;
+    minusLabel.style.top = mud.style.top;
+    minusLabel.style.color = "#F5402C";
+    minusLabel.style.fontWeight = "bold";
+    minusLabel.style.fontSize = "1.2rem";
+    minusLabel.style.pointerEvents = "none";
+    minusLabel.style.transition = "top 0.7s, opacity 0.7s";
+    minusLabel.style.opacity = "1";
+    gameArea.appendChild(minusLabel);
+    setTimeout(() => {
+      minusLabel.style.top = (parseInt(mud.style.top) - 30) + "px";
+      minusLabel.style.opacity = "0";
+    }, 10);
+    setTimeout(() => { minusLabel.remove(); }, 700);
+
     setTimeout(() => { if (mud.parentNode) mud.parentNode.removeChild(mud); }, 200);
     scoreDisplay.style.color = "#F5402C";
     setTimeout(() => { scoreDisplay.style.color = "#2E9DF7"; }, 300);
@@ -808,7 +845,7 @@ function spawnMud() {
 
   setTimeout(() => { if (mud.parentNode) mud.parentNode.removeChild(mud); }, 6000);
 }
-setInterval(() => { if (gameActive) spawnMud(); }, 12000 + Math.random() * 8000);
+setInterval(() => { if (gameActive) spawnCan(); }, 8000 + Math.random() * 7000);
 
 // --- Color palette from image ---
 const palette = {
