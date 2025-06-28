@@ -785,6 +785,7 @@ function showMilestoneMessage(msg) {
   }, 1800);
 
   setTimeout(() => { milestoneDiv.remove(); }, 2200);
+  playSfx(sfx.milestone);
 }
 
 // --- Check and display milestone when score increases by 10x ---
@@ -799,9 +800,10 @@ function checkMilestone(score) {
 
 // --- Sound Effects ---
 const sfx = {
-  upgrade: new Audio('audio/upgrade.mp3'), // Place your upgrade sound in audio/upgrade.mp3
-  start: new Audio('audio/start.mp3'),     // Place your start sound in audio/start.mp3
-  over: new Audio('audio/over.mp3')        // Place your game over sound in audio/over.mp3
+  upgrade: new Audio('audio/upgrade.mp3'),
+  start: new Audio('audio/start.mp3'),
+  over: new Audio('audio/over.mp3'),
+  milestone: new Audio('audio/milestone.mp3') // Place your milestone sound in audio/milestone.mp3
 };
 
 // Utility: Play a sound safely (rewind if needed)
