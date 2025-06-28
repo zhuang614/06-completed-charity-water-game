@@ -26,9 +26,17 @@ coinPanel.innerHTML = `
     🪙 Coins: <span id="coinCount">0</span>
   </div>
   <button class="btn btn-warning m-1" id="buyPower">+10 Tower Power (10 coins)</button>
+  <button class="btn btn-warning m-1" id="buyPower10">+100 Tower Power (100 coins)</button>
+  <button class="btn btn-warning m-1" id="buyPower100">+1000 Tower Power (1000 coins)</button>
   <button class="btn btn-info m-1" id="buyRange">+10 Tower Range (10 coins)</button>
+  <button class="btn btn-info m-1" id="buyRange10">+100 Tower Range (100 coins)</button>
+  <button class="btn btn-info m-1" id="buyRange100">+1000 Tower Range (1000 coins)</button>
   <button class="btn btn-success m-1" id="buySpeed">+0.2 Tower Speed (10 coins)</button>
-  <button class="btn btn-secondary m-1" id="buyHealth">+20 Community Health (10 coins)</button>
+  <button class="btn btn-success m-1" id="buySpeed10">+2 Tower Speed (100 coins)</button>
+  <button class="btn btn-success m-1" id="buySpeed100">+20 Tower Speed (1000 coins)</button>
+  <button class="btn btn-secondary m-1" id="buyHealth">+20 Tower Health (10 coins)</button>
+  <button class="btn btn-secondary m-1" id="buyHealth10">+200 Tower Health (100 coins)</button>
+  <button class="btn btn-secondary m-1" id="buyHealth100">+2000 Tower Health (1000 coins)</button>
   <hr>
 `;
 document.body.appendChild(coinPanel);
@@ -47,6 +55,23 @@ document.getElementById("buyPower").onclick = function () {
     updateCoins();
   }
 };
+document.getElementById("buyPower10").onclick = function () {
+  if (coins >= 100) {
+    coins -= 100;
+    towerStats.power += 100;
+    towers.forEach(tower => tower.el.dataset.power = towerStats.power);
+    updateCoins();
+  }
+};
+document.getElementById("buyPower100").onclick = function () {
+  if (coins >= 1000) {
+    coins -= 1000;
+    towerStats.power += 1000;
+    towers.forEach(tower => tower.el.dataset.power = towerStats.power);
+    updateCoins();
+  }
+};
+
 document.getElementById("buyRange").onclick = function () {
   if (coins >= 10) {
     coins -= 10;
@@ -55,6 +80,23 @@ document.getElementById("buyRange").onclick = function () {
     updateCoins();
   }
 };
+document.getElementById("buyRange10").onclick = function () {
+  if (coins >= 100) {
+    coins -= 100;
+    towerStats.range += 100;
+    towers.forEach(tower => tower.el.dataset.range = towerStats.range);
+    updateCoins();
+  }
+};
+document.getElementById("buyRange100").onclick = function () {
+  if (coins >= 1000) {
+    coins -= 1000;
+    towerStats.range += 1000;
+    towers.forEach(tower => tower.el.dataset.range = towerStats.range);
+    updateCoins();
+  }
+};
+
 document.getElementById("buySpeed").onclick = function () {
   if (coins >= 10) {
     coins -= 10;
@@ -64,11 +106,46 @@ document.getElementById("buySpeed").onclick = function () {
     updateCoins();
   }
 };
+document.getElementById("buySpeed10").onclick = function () {
+  if (coins >= 100) {
+    coins -= 100;
+    towerStats.speed += 2;
+    towers.forEach(tower => tower.el.dataset.speed = towerStats.speed.toFixed(1));
+    if (gameActive) restartGameInterval();
+    updateCoins();
+  }
+};
+document.getElementById("buySpeed100").onclick = function () {
+  if (coins >= 1000) {
+    coins -= 1000;
+    towerStats.speed += 20;
+    towers.forEach(tower => tower.el.dataset.speed = towerStats.speed.toFixed(1));
+    if (gameActive) restartGameInterval();
+    updateCoins();
+  }
+};
+
 document.getElementById("buyHealth").onclick = function () {
   if (coins >= 10) {
     coins -= 10;
-    communityBaseHealth += 20;
-    communities.forEach(comm => { if (comm.alive) comm.health += 20; comm.el.dataset.health = comm.health; });
+    towerBaseHealth += 20;
+    towers.forEach(tower => { if (tower.health > 0) tower.health += 20; setHpBar(tower.el, tower.health, towerBaseHealth); });
+    updateCoins();
+  }
+};
+document.getElementById("buyHealth10").onclick = function () {
+  if (coins >= 100) {
+    coins -= 100;
+    towerBaseHealth += 200;
+    towers.forEach(tower => { if (tower.health > 0) tower.health += 200; setHpBar(tower.el, tower.health, towerBaseHealth); });
+    updateCoins();
+  }
+};
+document.getElementById("buyHealth100").onclick = function () {
+  if (coins >= 1000) {
+    coins -= 1000;
+    towerBaseHealth += 2000;
+    towers.forEach(tower => { if (tower.health > 0) tower.health += 2000; setHpBar(tower.el, tower.health, towerBaseHealth); });
     updateCoins();
   }
 };
@@ -104,6 +181,14 @@ function isOverlapping(x, y, size, arr, arrSize) {
 // --- Tooltip that follows mouse ---
 function attachTooltipFollow(div, getHTML) {
   let tooltip = null;
+  let removeTooltip = () => {
+    if (tooltip) {
+      tooltip.remove();
+      tooltip = null;
+    }
+    div.removeEventListener("mousemove", mousemoveHandler);
+    div._tooltip = null;
+  };
   function mousemoveHandler(e) {
     if (tooltip) {
       tooltip.style.left = (e.pageX + 20) + "px";
@@ -111,6 +196,7 @@ function attachTooltipFollow(div, getHTML) {
     }
   }
   div.addEventListener("mouseenter", function (e) {
+    if (tooltip) removeTooltip();
     tooltip = document.createElement("div");
     tooltip.className = "pollutant-tooltip";
     tooltip.innerHTML = getHTML();
@@ -120,12 +206,16 @@ function attachTooltipFollow(div, getHTML) {
     div.addEventListener("mousemove", mousemoveHandler);
   });
   div.addEventListener("mousemove", mousemoveHandler);
-  div.addEventListener("mouseleave", function () {
-    if (tooltip) tooltip.remove();
-    tooltip = null;
-    div.removeEventListener("mousemove", mousemoveHandler);
-    div._tooltip = null;
+  div.addEventListener("mouseleave", removeTooltip);
+
+  // Extra: Remove tooltip if element is removed from DOM
+  const observer = new MutationObserver(() => {
+    if (!document.body.contains(div)) {
+      removeTooltip();
+      observer.disconnect();
+    }
   });
+  observer.observe(document.body, { childList: true, subtree: true });
 }
 
 // --- Utility to create/update an HP bar ---
