@@ -800,7 +800,8 @@ function checkMilestone(score) {
 // --- Sound Effects ---
 const sfx = {
   upgrade: new Audio('audio/upgrade.mp3'), // Place your upgrade sound in audio/upgrade.mp3
-  start: new Audio('audio/start.mp3')      // Place your start sound in audio/start.mp3
+  start: new Audio('audio/start.mp3'),     // Place your start sound in audio/start.mp3
+  over: new Audio('audio/over.mp3')        // Place your game over sound in audio/over.mp3
 };
 
 // Utility: Play a sound safely (rewind if needed)
@@ -808,7 +809,6 @@ function playSfx(sound) {
   if (sound && sound.paused === false) sound.currentTime = 0;
   sound && sound.play();
 }
-
 
 // --- Game Start/End/Next Level ---
 function startGame() {
@@ -839,6 +839,7 @@ function endGame() {
   gameOverDisplay.style.display = "block";
   if (replayBtn) replayBtn.style.display = "inline-block"; // Show replay button on game over
   showConfetti();
+  playSfx(sfx.over);
 }
 
 function nextLevel() {
