@@ -288,8 +288,8 @@ style.innerHTML = `
     font-family: 'Proxima Nova', Arial, sans-serif !important;
   }
   #coinPanel {
-    background: ${palette.lightBlue} !important;
-    color: ${palette.darkBlue} !important;
+    background: ${palette.darkBlue} !important;
+    color: ${palette.lightBlue} !important;
     border-radius: 14px !important;
     box-shadow: 0 2px 12px ${palette.teal}33;
     border: 3px solid ${palette.teal};
@@ -303,9 +303,9 @@ style.innerHTML = `
     background: ${palette.yellow} !important;
     color: ${palette.darkBlue} !important;
   }
-  /* Make tower range button a unique color (teal) */
+  /* Make tower range button a unique color (light blue) */
   #buyRange, #buyRange10, #buyRange100 {
-    background: ${palette.teal} !important;
+    background: ${palette.lightBlue} !important;
     color: ${palette.darkBlue} !important;
     border: 2px solid ${palette.darkBlue} !important;
   }
@@ -935,7 +935,7 @@ style2.innerHTML = `
     background: #D4D6C5 !important;
   }
   .hp-bar-fill {
-    background: #3FBFBB !important;
+    background: #28403F !important;
   }
   .pollutant-tooltip {
     background: #FFF !important;
