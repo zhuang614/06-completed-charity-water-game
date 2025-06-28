@@ -667,7 +667,8 @@ scoreDisplay.style.transition = "color 0.2s";
 const logo = document.createElement("img");
 logo.src = "img/cw_logo.png"; // Replace with your actual image file name in the img/ folder
 logo.alt = "charity: water";
-logo.style.height = "40px";
+// Make the logo bigger:
+logo.style.height = "80px"; // Increased from 40px to 80px
 logo.style.margin = "10px";
 logo.style.display = "block";
 logo.style.marginLeft = "auto";
