@@ -328,7 +328,62 @@ function createTowerAroundCommunity(community, minDist = 50, maxDist = 90, maxTr
   return false;
 }
 
-// --- Create Pollutant ---
+// --- Difficulty Modes ---
+const difficultyModes = {
+  Easy:   { intervalDelay: 400, winScore: 3000, canInterval: 9000, mudInterval: 15000, pollutantHp: 40, pollutantPower: 40 },
+  Normal: { intervalDelay: 300, winScore: 5000, canInterval: 8000, mudInterval: 12000, pollutantHp: 50, pollutantPower: 50 },
+  Hard:   { intervalDelay: 200, winScore: 8000, canInterval: 6000, mudInterval: 9000,  pollutantHp: 70, pollutantPower: 70 }
+};
+let currentDifficulty = "Normal";
+
+// --- Difficulty Selector UI ---
+const difficultyPanel = document.createElement("span");
+difficultyPanel.style.display = "inline-block";
+difficultyPanel.style.marginLeft = "18px";
+difficultyPanel.innerHTML = `
+  <label style="font-weight:bold;" for="difficultySelect">Difficulty: </label>
+  <select id="difficultySelect" style="font-size:1rem;padding:4px 8px;border-radius:6px;">
+    <option value="Easy">Easy</option>
+    <option value="Normal" selected>Normal</option>
+    <option value="Hard">Hard</option>
+  </select>
+`;
+
+// Move the difficulty selector next to the start button
+if (startBtn && startBtn.parentNode) {
+  startBtn.parentNode.insertBefore(difficultyPanel, startBtn.nextSibling);
+}
+
+document.getElementById("difficultySelect").addEventListener("change", function() {
+  currentDifficulty = this.value;
+  setDifficulty();
+  resetGame();
+});
+
+function setDifficulty() {
+  const d = difficultyModes[currentDifficulty];
+  intervalDelay = d.intervalDelay;
+  winScore = d.winScore;
+  canSpawnInterval = d.canInterval;
+  mudSpawnInterval = d.mudInterval;
+  pollutantBaseHp = d.pollutantHp;
+  pollutantBasePower = d.pollutantPower;
+}
+
+// --- Override relevant variables for difficulty ---
+let winScore = difficultyModes[currentDifficulty].winScore;
+let canSpawnInterval = difficultyModes[currentDifficulty].canInterval;
+let mudSpawnInterval = difficultyModes[currentDifficulty].mudInterval;
+let pollutantBaseHp = difficultyModes[currentDifficulty].pollutantHp;
+let pollutantBasePower = difficultyModes[currentDifficulty].pollutantPower;
+
+// --- Update spawnCan and spawnMud intervals ---
+clearInterval(window.canIntervalId);
+clearInterval(window.mudIntervalId);
+window.canIntervalId = setInterval(() => { if (gameActive) spawnCan(); }, canSpawnInterval + Math.random() * 2000);
+window.mudIntervalId = setInterval(() => { if (gameActive) spawnMud(); }, mudSpawnInterval + Math.random() * 2000);
+
+// --- Update createPollutant to use difficulty ---
 function createPollutant() {
   if (spawnedPollutants >= maxPollutants || communities.length === 0) return;
   const edge = Math.floor(Math.random() * 4);
@@ -337,7 +392,7 @@ function createPollutant() {
   else if (edge === 1) { startX = gameArea.clientWidth - 30; startY = Math.random() * (gameArea.clientHeight - 30); }
   else if (edge === 2) { startX = Math.random() * (gameArea.clientWidth - 30); startY = gameArea.clientHeight - 30; }
   else { startX = 0; startY = Math.random() * (gameArea.clientHeight - 30); }
-  let hp = 50 + (level * 10), speed = 1 + level * 0.2, power = 50 + (level * 10);
+  let hp = pollutantBaseHp + (level * 10), speed = 1 + level * 0.2, power = pollutantBasePower + (level * 10);
   const div = document.createElement("div");
   div.classList.add("entity", "pollutant");
   div.style.left = `${startX}px`;
@@ -549,6 +604,10 @@ function updateGame() {
     if (autoNextLevelActive) {
       setTimeout(() => { if (autoNextLevelActive) nextLevel(); }, 800);
     }
+  }
+  if (score >= winScore) {
+    endGame();
+    return;
   }
 }
 
@@ -836,3 +895,6 @@ bulletStyle.innerHTML = `
   }
 `;
 document.head.appendChild(bulletStyle);
+
+// --- Ensure setDifficulty is called on load ---
+setDifficulty();
