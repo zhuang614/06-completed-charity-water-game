@@ -297,7 +297,7 @@ style.innerHTML = `
   body {
     background: ${palette.beige} !important;
     color: ${palette.darkBlue} !important;
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-family: 'Proxima Nova', Avenir Light, Georgia Regular !important;
   }
   #coinPanel {
     background: ${palette.darkBlue} !important;
@@ -948,7 +948,7 @@ mission.innerHTML = `<span style="color:#003366;font-weight:bold;">Every drop co
 mission.style.textAlign = "center";
 mission.style.fontSize = "1.1rem";
 mission.style.marginBottom = "10px";
-mission.style.fontFamily = "'Proxima Nova', Arial, sans-serif";
+mission.style.fontFamily = "'Proxima Nova', Avenir Light, Georgia Regular";
 document.body.insertBefore(mission, coinPanel);
 
 // --- Footer with charity: water links and accessible contrast ---
@@ -959,7 +959,7 @@ footer.style.padding = "18px 0 10px 0";
 footer.style.background = "#F8F6DF"; // Brand light yellow, but lighter for contrast
 footer.style.borderTop = "2px solid #FFC907";
 footer.style.fontSize = "1.05rem";
-footer.style.fontFamily = "'Proxima Nova', Arial, sans-serif";
+footer.style.fontFamily = "'Proxima Nova', Avenir Light, Georgia Regular";
 footer.innerHTML = `
   <a href="https://www.charitywater.org/home" target="_blank" style="color:#003366;font-weight:bold;text-decoration:underline;background:#FFF;padding:2px 6px;border-radius:4px;">
     Visit charity: water
@@ -977,11 +977,10 @@ style2.innerHTML = `
   body {
     background: #F8F6DF !important;
     color: #28403F !important; /* Use dark blue-green for best contrast */
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-family: 'Proxima Nova', Avenir Light, Georgia Regular !important;
   }
   #coinPanel, .btn, #gameOver, #score, #level {
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
-  }
+    font-family: 'Proxima Nova', Avenir Light, Georgia Regular !important;
   .btn {
     color: #28403F !important; /* Very dark text for best contrast */
     background: #FFDA48 !important; /* Brand yellow */
@@ -1035,12 +1034,12 @@ style2.innerHTML = `
     border: 1px solid #FFDA48 !important;
     border-radius: 6px !important;
     padding: 6px 10px !important;
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-family: 'Proxima Nova', Avenir Light, Georgia Regular !important;
     font-size: 1rem !important;
     border-top: 2px solid #FFDA48 !important;
   }
   footer a {
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-family: 'Proxima Nova', Avenir Light, Georgia Regular !important;
     font-weight: bold !important;
     text-decoration: underline !important;
     border-radius: 4px !important;
@@ -1056,7 +1055,7 @@ style2.innerHTML = `
   }
   .title, h1, h2, h3 {
     color: #28403F !important;
-    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-family: 'Proxima Nova', Avenir Light, Georgia Regular !important;
     font-weight: bold !important;
   }
   .mission-highlight {
