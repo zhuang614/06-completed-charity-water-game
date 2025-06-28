@@ -380,6 +380,7 @@ function setHpBar(parentDiv, hp, maxHp) {
 
 // --- Create Community ---
 function createCommunity(x, y) {
+  // Keep within gameArea border
   const minX = 0, minY = 0, maxX = gameArea.clientWidth - 40, maxY = gameArea.clientHeight - 40;
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
@@ -409,6 +410,7 @@ function createCommunity(x, y) {
 
 // --- Create Tower ---
 function createTower(x, y) {
+  // Keep within gameArea border
   const minX = 0, minY = 0, maxX = gameArea.clientWidth - 30, maxY = gameArea.clientHeight - 30;
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
@@ -524,6 +526,9 @@ function createPollutant() {
   else if (edge === 1) { startX = gameArea.clientWidth - 30; startY = Math.random() * (gameArea.clientHeight - 30); }
   else if (edge === 2) { startX = Math.random() * (gameArea.clientWidth - 30); startY = gameArea.clientHeight - 30; }
   else { startX = 0; startY = Math.random() * (gameArea.clientHeight - 30); }
+  // Keep within gameArea border
+  startX = Math.max(0, Math.min(startX, gameArea.clientWidth - 30));
+  startY = Math.max(0, Math.min(startY, gameArea.clientHeight - 30));
   let hp = pollutantBaseHp + (level * 10), speed = 1 + level * 0.2, power = pollutantBasePower + (level * 10);
   const div = document.createElement("div");
   div.classList.add("entity", "pollutant");
@@ -1032,11 +1037,6 @@ style2.innerHTML = `
     padding: 6px 10px !important;
     font-family: 'Proxima Nova', Arial, sans-serif !important;
     font-size: 1rem !important;
-    box-shadow: 0 2px 8px #D7B99244;
-  }
-  footer {
-    background: #F8F6DF !important;
-    color: #28403F !important;
     border-top: 2px solid #FFDA48 !important;
   }
   footer a {
