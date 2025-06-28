@@ -754,40 +754,124 @@ scoreDisplay.style.fontWeight = "bold";
 scoreDisplay.style.transition = "color 0.2s";
 
 // --- Charity: water logo and message ---
+// Use recommended logo size and spacing from brand guide
 const logo = document.createElement("img");
 logo.src = "img/cw_logo.png"; // Replace with your actual image file name in the img/ folder
 logo.alt = "charity: water";
-logo.style.height = "80px";
-logo.style.margin = "10px";
+logo.style.height = "95px"; // Brand guide: 95px for web
+logo.style.margin = "18px";
 logo.style.display = "block";
 logo.style.marginLeft = "auto";
 logo.style.marginRight = "auto";
 document.body.insertBefore(logo, document.body.firstChild);
 
+// --- Mission statement with improved contrast ---
 const mission = document.createElement("div");
-mission.innerHTML = `<span style="color:#ffd700;font-weight:bold;">Every drop counts!</span> Help keep communities safe and clean.`;
+mission.innerHTML = `<span style="color:#003366;font-weight:bold;">Every drop counts!</span> <span style="color:#222;">Help keep communities safe and clean.</span>`;
 mission.style.textAlign = "center";
 mission.style.fontSize = "1.1rem";
 mission.style.marginBottom = "10px";
+mission.style.fontFamily = "'Proxima Nova', Arial, sans-serif";
 document.body.insertBefore(mission, coinPanel);
 
-// --- Footer with charity: water links ---
+// --- Footer with charity: water links and accessible contrast ---
 const footer = document.createElement("footer");
 footer.style.textAlign = "center";
 footer.style.marginTop = "30px";
 footer.style.padding = "18px 0 10px 0";
-footer.style.background = "#FFF7E1";
+footer.style.background = "#F8F6DF"; // Brand light yellow, but lighter for contrast
 footer.style.borderTop = "2px solid #FFC907";
 footer.style.fontSize = "1.05rem";
+footer.style.fontFamily = "'Proxima Nova', Arial, sans-serif";
 footer.innerHTML = `
-  <a href="https://www.charitywater.org/home" target="_blank" style="color:#003366;font-weight:bold;text-decoration:underline;">
+  <a href="https://www.charitywater.org/home" target="_blank" style="color:#003366;font-weight:bold;text-decoration:underline;background:#FFF;padding:2px 6px;border-radius:4px;">
     Visit charity: water
   </a>
   &nbsp;|&nbsp;
-  <a href="https://www.charitywater.org/donate" target="_blank" style="color:#FFC907;font-weight:bold;text-decoration:underline;">
+  <a href="https://www.charitywater.org/donate" target="_blank" style="color:#003366;font-weight:bold;text-decoration:underline;background:#FFC907;padding:2px 6px;border-radius:4px;">
     Donate Now
   </a>
 `;
 document.body.appendChild(footer);
 
-//
+// --- Improve button and panel contrast globally ---
+const style = document.createElement("style");
+style.innerHTML = `
+  body {
+    background: #F8F6DF !important;
+    color: #003366 !important;
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+  }
+  #coinPanel, .btn, #gameOver, #score, #level {
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+  }
+  .btn {
+    color: #003366 !important;
+    background: #FFC907 !important;
+    border: 2px solid #003366 !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px #D7B99222;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-danger {
+    background: #F5402C !important;
+    color: #FFF !important;
+    border: 2px solid #B49559 !important;
+  }
+  .btn-success {
+    background: #4caf50 !important;
+    color: #FFF !important;
+    border: 2px solid #003366 !important;
+  }
+  .btn-info {
+    background: #A6BDDA !important;
+    color: #003366 !important;
+    border: 2px solid #003366 !important;
+  }
+  .btn-secondary {
+    background: #D7B992 !important;
+    color: #003366 !important;
+    border: 2px solid #003366 !important;
+  }
+  .btn-warning {
+    background: #FFC907 !important;
+    color: #003366 !important;
+    border: 2px solid #003366 !important;
+  }
+  .can, .mud {
+    border-radius: 50%;
+    border: 2px solid #FFC907;
+    background: #FFF !important;
+  }
+  .can:hover { filter: brightness(1.2) drop-shadow(0 0 8px #FFC907); }
+  .mud:hover { filter: brightness(0.8) drop-shadow(0 0 8px #B49559); }
+  .hp-bar {
+    background: #D4D6C5 !important;
+  }
+  .hp-bar-fill {
+    background: #4caf50 !important;
+  }
+  .pollutant-tooltip {
+    background: #FFF !important;
+    color: #003366 !important;
+    border: 1px solid #FFC907 !important;
+    border-radius: 6px !important;
+    padding: 6px 10px !important;
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-size: 1rem !important;
+    box-shadow: 0 2px 8px #D7B99244;
+  }
+  footer a {
+    font-family: 'Proxima Nova', Arial, sans-serif !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+    border-radius: 4px !important;
+  }
+  footer a:hover {
+    background: #003366 !important;
+    color: #FFC907 !important;
+    text-decoration: none !important;
+  }
+`;
+document.head.appendChild(style);
