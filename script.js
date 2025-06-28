@@ -757,8 +757,7 @@ scoreDisplay.style.transition = "color 0.2s";
 const logo = document.createElement("img");
 logo.src = "img/cw_logo.png"; // Replace with your actual image file name in the img/ folder
 logo.alt = "charity: water";
-// Make the logo bigger:
-logo.style.height = "80px"; // Increased from 40px to 80px
+logo.style.height = "80px";
 logo.style.margin = "10px";
 logo.style.display = "block";
 logo.style.marginLeft = "auto";
@@ -772,197 +771,23 @@ mission.style.fontSize = "1.1rem";
 mission.style.marginBottom = "10px";
 document.body.insertBefore(mission, coinPanel);
 
-// --- Style for cans and muds (add to your CSS or here for demo) ---
-const style = document.createElement("style");
-style.innerHTML = `
-  .can:hover { filter: brightness(1.2) drop-shadow(0 0 8px #ffd700); }
-  .mud:hover { filter: brightness(0.8) drop-shadow(0 0 8px #b5651d); }
-  @media (max-width: 700px) {
-    #gameArea { min-width: 220px !important; min-height: 220px !important; }
-    .can, .mud { width: 24px !important; height: 24px !important; }
-    #coinPanel { font-size: 0.95rem; }
-  }
+// --- Footer with charity: water links ---
+const footer = document.createElement("footer");
+footer.style.textAlign = "center";
+footer.style.marginTop = "30px";
+footer.style.padding = "18px 0 10px 0";
+footer.style.background = "#FFF7E1";
+footer.style.borderTop = "2px solid #FFC907";
+footer.style.fontSize = "1.05rem";
+footer.innerHTML = `
+  <a href="https://www.charitywater.org/home" target="_blank" style="color:#003366;font-weight:bold;text-decoration:underline;">
+    Visit charity: water
+  </a>
+  &nbsp;|&nbsp;
+  <a href="https://www.charitywater.org/donate" target="_blank" style="color:#FFC907;font-weight:bold;text-decoration:underline;">
+    Donate Now
+  </a>
 `;
-document.head.appendChild(style);
+document.body.appendChild(footer);
 
-// --- Interactive "can" elements to collect points ---
-function spawnCan() {
-  const can = document.createElement("div");
-  can.className = "can";
-  can.style.position = "absolute";
-  can.style.width = "32px";
-  can.style.height = "32px";
-  can.style.background = "url('https://cdn-icons-png.flaticon.com/512/1046/1046857.png') no-repeat center/contain";
-  can.style.left = Math.random() * (gameArea.clientWidth - 32) + "px";
-  can.style.top = Math.random() * (gameArea.clientHeight - 32) + "px";
-  can.style.cursor = "pointer";
-  can.style.transition = "box-shadow 0.2s";
-  gameArea.appendChild(can);
-
-  can.onclick = function () {
-    score += 15;
-    scoreDisplay.innerText = score;
-    can.style.boxShadow = "0 0 16px 4px #FFC907";
-    can.style.backgroundColor = "#FFE066";
-    // Add a "+15" floating label when clicked
-    const plusLabel = document.createElement("div");
-    plusLabel.textContent = "+15";
-    plusLabel.style.position = "absolute";
-    plusLabel.style.left = can.style.left;
-    plusLabel.style.top = can.style.top;
-    plusLabel.style.color = "#FFC907";
-    plusLabel.style.fontWeight = "bold";
-    plusLabel.style.fontSize = "1.2rem";
-    plusLabel.style.pointerEvents = "none";
-    plusLabel.style.transition = "top 0.7s, opacity 0.7s";
-    plusLabel.style.opacity = "1";
-    gameArea.appendChild(plusLabel);
-    setTimeout(() => {
-      plusLabel.style.top = (parseInt(can.style.top) - 30) + "px";
-      plusLabel.style.opacity = "0";
-    }, 10);
-    setTimeout(() => { plusLabel.remove(); }, 700);
-
-    setTimeout(() => { if (can.parentNode) can.parentNode.removeChild(can); }, 200);
-    scoreDisplay.style.color = "#FFC907";
-    setTimeout(() => { scoreDisplay.style.color = "#2E9DF7"; }, 300);
-  };
-
-  setTimeout(() => { if (can.parentNode) can.parentNode.removeChild(can); }, 7000);
-}
-
-// --- Obstacle: "mud puddle" that reduces score ---
-function spawnMud() {
-  const mud = document.createElement("div");
-  mud.className = "mud";
-  mud.style.position = "absolute";
-  mud.style.width = "36px";
-  mud.style.height = "36px";
-  mud.style.background = "url('https://cdn-icons-png.flaticon.com/512/616/616494.png') no-repeat center/contain";
-  mud.style.left = Math.random() * (gameArea.clientWidth - 36) + "px";
-  mud.style.top = Math.random() * (gameArea.clientHeight - 36) + "px";
-  mud.style.cursor = "pointer";
-  mud.style.opacity = "0.85";
-  gameArea.appendChild(mud);
-
-  mud.onclick = function () {
-    score = Math.max(0, score - 10);
-    scoreDisplay.innerText = score;
-    mud.style.boxShadow = "0 0 16px 4px #F5402C";
-    mud.style.backgroundColor = "#F5402C";
-    // Add a "-10" floating label when clicked
-    const minusLabel = document.createElement("div");
-    minusLabel.textContent = "-10";
-    minusLabel.style.position = "absolute";
-    minusLabel.style.left = mud.style.left;
-    minusLabel.style.top = mud.style.top;
-    minusLabel.style.color = "#F5402C";
-    minusLabel.style.fontWeight = "bold";
-    minusLabel.style.fontSize = "1.2rem";
-    minusLabel.style.pointerEvents = "none";
-    minusLabel.style.transition = "top 0.7s, opacity 0.7s";
-    minusLabel.style.opacity = "1";
-    gameArea.appendChild(minusLabel);
-    setTimeout(() => {
-      minusLabel.style.top = (parseInt(mud.style.top) - 30) + "px";
-      minusLabel.style.opacity = "0";
-    }, 10);
-    setTimeout(() => { minusLabel.remove(); }, 700);
-
-    setTimeout(() => { if (mud.parentNode) mud.parentNode.removeChild(mud); }, 200);
-    scoreDisplay.style.color = "#F5402C";
-    setTimeout(() => { scoreDisplay.style.color = "#2E9DF7"; }, 300);
-  };
-
-  setTimeout(() => { if (mud.parentNode) mud.parentNode.removeChild(mud); }, 6000);
-}
-setInterval(() => { if (gameActive) spawnCan(); }, 8000 + Math.random() * 7000);
-
-// --- Color palette from image ---
-const palette = {
-  yellow: "#FFC907",
-  darkBlue: "#003366",
-  blue: "#77A8BB",
-  lightYellow: "#FFF7E1",
-  black: "#1A1A1A",
-  peach: "#FED8C1",
-  brown: "#BF6C46",
-  lightGray: "#CBCCD1"
-};
-
-// --- Responsive Layout & Brand Colors ---
-document.body.style.background = palette.lightYellow;
-document.body.style.fontFamily = "'Proxima Nova', 'Avenir', Arial, sans-serif";
-if (typeof gameArea !== "undefined") {
-  gameArea.style.background = palette.blue;
-  gameArea.style.border = `4px solid ${palette.darkBlue}`;
-  gameArea.style.borderRadius = "18px";
-  gameArea.style.boxShadow = `0 4px 24px ${palette.lightGray}`;
-  gameArea.style.width = "90vw";
-  gameArea.style.maxWidth = "900px";
-  gameArea.style.height = "60vw";
-  gameArea.style.maxHeight = "600px";
-  gameArea.style.minHeight = "350px";
-  gameArea.style.minWidth = "350px";
-  gameArea.style.margin = "auto";
-  gameArea.style.position = "relative";
-  gameArea.style.overflow = "hidden";
-}
-if (typeof coinPanel !== "undefined") {
-  coinPanel.style.background = palette.lightYellow;
-  coinPanel.style.border = `2px solid ${palette.yellow}`;
-  coinPanel.style.borderRadius = "12px";
-  coinPanel.style.boxShadow = `0 2px 12px ${palette.lightGray}`;
-  coinPanel.style.fontFamily = "'Proxima Nova', 'Avenir', Arial, sans-serif";
-  coinPanel.style.maxWidth = "900px";
-  coinPanel.style.margin = "20px auto";
-  coinPanel.style.width = "90vw";
-}
-if (typeof scoreDisplay !== "undefined") {
-  scoreDisplay.style.color = palette.darkBlue;
-  scoreDisplay.style.fontWeight = "bold";
-}
-if (typeof levelDisplay !== "undefined") {
-  levelDisplay.style.color = palette.yellow;
-  levelDisplay.style.fontWeight = "bold";
-}
-document.querySelectorAll("button").forEach(btn => {
-  btn.style.fontFamily = "'Proxima Nova', 'Avenir', Arial, sans-serif";
-  btn.style.fontWeight = "bold";
-  btn.style.borderRadius = "8px";
-  btn.style.background = palette.yellow;
-  btn.style.color = palette.black;
-  btn.style.border = `2px solid ${palette.darkBlue}`;
-});
-const styleBrand = document.createElement("style");
-styleBrand.innerHTML = `
-  .can:hover { filter: brightness(1.2) drop-shadow(0 0 8px ${palette.yellow}); }
-  .mud:hover { filter: brightness(0.8) drop-shadow(0 0 8px ${palette.brown}); }
-  .can, .mud { border-radius: 50%; border: 2px solid ${palette.yellow}; }
-  #coinPanel { box-shadow: 0 2px 12px ${palette.lightGray}; }
-  .can { background-color: ${palette.peach} !important; }
-  .mud { background-color: ${palette.brown} !important; }
-  #gameOver, #score, #level { color: ${palette.darkBlue} !important; }
-  @media (max-width: 700px) {
-    #gameArea { min-width: 220px !important; min-height: 220px !important; width: 98vw !important; height: 60vw !important; }
-    .can, .mud { width: 24px !important; height: 24px !important; }
-    #coinPanel { font-size: 0.95rem; width: 98vw !important; }
-  }
-`;
-document.head.appendChild(styleBrand);
-
-// --- Add bullet CSS for visibility ---
-const bulletStyle = document.createElement("style");
-bulletStyle.innerHTML = `
-  .bullet {
-    transition: left 0.05s linear, top 0.05s linear;
-    border: 2px solid ${palette.yellow};
-    box-sizing: border-box;
-    background: ${palette.darkBlue};
-    box-shadow: 0 0 8px ${palette.yellow};
-  }
-`;
-document.head.appendChild(bulletStyle);
-
-// --- Ensure setDifficulty is called on load ---
-setDifficulty();
+//
