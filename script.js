@@ -93,6 +93,7 @@ document.getElementById("buyPower").onclick = function () {
     towers.forEach(tower => tower.el.dataset.power = towerStats.power);
     updateCoins();
     showStatPopup("+10 Power", "#28a745");
+    playSfx(sfx.upgrade); // Play upgrade sound
   }
 };
 document.getElementById("buyPower10").onclick = function () {
@@ -102,6 +103,7 @@ document.getElementById("buyPower10").onclick = function () {
     towers.forEach(tower => tower.el.dataset.power = towerStats.power);
     updateCoins();
     showStatPopup("+100 Power", "#28a745");
+    playSfx(sfx.upgrade);
   }
 };
 document.getElementById("buyPower100").onclick = function () {
@@ -111,6 +113,7 @@ document.getElementById("buyPower100").onclick = function () {
     towers.forEach(tower => tower.el.dataset.power = towerStats.power);
     updateCoins();
     showStatPopup("+1000 Power", "#28a745");
+    playSfx(sfx.upgrade);
   }
 };
 
@@ -121,6 +124,7 @@ document.getElementById("buyRange").onclick = function () {
     towers.forEach(tower => tower.el.dataset.range = towerStats.range);
     updateCoins();
     showStatPopup("+10 Range", "#007bff");
+    playSfx(sfx.upgrade);
   }
 };
 document.getElementById("buyRange10").onclick = function () {
@@ -130,6 +134,7 @@ document.getElementById("buyRange10").onclick = function () {
     towers.forEach(tower => tower.el.dataset.range = towerStats.range);
     updateCoins();
     showStatPopup("+100 Range", "#007bff");
+    playSfx(sfx.upgrade);
   }
 };
 document.getElementById("buyRange100").onclick = function () {
@@ -139,6 +144,7 @@ document.getElementById("buyRange100").onclick = function () {
     towers.forEach(tower => tower.el.dataset.range = towerStats.range);
     updateCoins();
     showStatPopup("+1000 Range", "#007bff");
+    playSfx(sfx.upgrade);
   }
 };
 
@@ -150,6 +156,7 @@ document.getElementById("buySpeed").onclick = function () {
     if (gameActive) restartGameInterval();
     updateCoins();
     showStatPopup("+0.2 Speed", "#17a2b8");
+    playSfx(sfx.upgrade);
   }
 };
 document.getElementById("buySpeed10").onclick = function () {
@@ -160,6 +167,7 @@ document.getElementById("buySpeed10").onclick = function () {
     if (gameActive) restartGameInterval();
     updateCoins();
     showStatPopup("+2 Speed", "#17a2b8");
+    playSfx(sfx.upgrade);
   }
 };
 document.getElementById("buySpeed100").onclick = function () {
@@ -170,6 +178,7 @@ document.getElementById("buySpeed100").onclick = function () {
     if (gameActive) restartGameInterval();
     updateCoins();
     showStatPopup("+20 Speed", "#17a2b8");
+    playSfx(sfx.upgrade);
   }
 };
 
@@ -180,6 +189,7 @@ document.getElementById("buyHealth").onclick = function () {
     towers.forEach(tower => { if (tower.health > 0) tower.health += 20; setHpBar(tower.el, tower.health, towerBaseHealth); });
     updateCoins();
     showStatPopup("+20 Health", "#ffc107");
+    playSfx(sfx.upgrade);
   }
 };
 document.getElementById("buyHealth10").onclick = function () {
@@ -189,6 +199,7 @@ document.getElementById("buyHealth10").onclick = function () {
     towers.forEach(tower => { if (tower.health > 0) tower.health += 200; setHpBar(tower.el, tower.health, towerBaseHealth); });
     updateCoins();
     showStatPopup("+200 Health", "#ffc107");
+    playSfx(sfx.upgrade);
   }
 };
 document.getElementById("buyHealth100").onclick = function () {
@@ -198,6 +209,7 @@ document.getElementById("buyHealth100").onclick = function () {
     towers.forEach(tower => { if (tower.health > 0) tower.health += 2000; setHpBar(tower.el, tower.health, towerBaseHealth); });
     updateCoins();
     showStatPopup("+2000 Health", "#ffc107");
+    playSfx(sfx.upgrade);
   }
 };
 
@@ -725,6 +737,17 @@ function updateGame() {
       setTimeout(() => { if (autoNextLevelActive) nextLevel(); }, 800);
     }
   }
+}
+
+// --- Sound Effects ---
+const sfx = {
+  upgrade: new Audio('audio/upgrade.mp3') // Place your upgrade sound in audio/upgrade.mp3
+};
+
+// Utility: Play a sound safely (rewind if needed)
+function playSfx(sound) {
+  if (sound && sound.paused === false) sound.currentTime = 0;
+  sound && sound.play();
 }
 
 // --- Game Start/End/Next Level ---
