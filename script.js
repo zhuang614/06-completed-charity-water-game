@@ -47,12 +47,36 @@ function updateCoins() {
 }
 
 // --- Coin spend/upgrade logic ---
+function showStatPopup(text, color) {
+  const statLabel = document.createElement("div");
+  statLabel.textContent = text;
+  statLabel.style.position = "absolute";
+  // Place popup near the coin panel (or center if not found)
+  const panelRect = coinPanel.getBoundingClientRect();
+  statLabel.style.left = (panelRect.left + panelRect.width / 2 - 30) + "px";
+  statLabel.style.top = (panelRect.top - 30 + window.scrollY) + "px";
+  statLabel.style.color = color;
+  statLabel.style.fontWeight = "bold";
+  statLabel.style.fontSize = "1.2rem";
+  statLabel.style.pointerEvents = "none";
+  statLabel.style.transition = "top 0.7s, opacity 0.7s";
+  statLabel.style.opacity = "1";
+  statLabel.style.zIndex = "9999";
+  document.body.appendChild(statLabel);
+  setTimeout(() => {
+    statLabel.style.top = (parseInt(statLabel.style.top) - 30) + "px";
+    statLabel.style.opacity = "0";
+  }, 10);
+  setTimeout(() => { statLabel.remove(); }, 700);
+}
+
 document.getElementById("buyPower").onclick = function () {
   if (coins >= 10) {
     coins -= 10;
     towerStats.power += 10;
     towers.forEach(tower => tower.el.dataset.power = towerStats.power);
     updateCoins();
+    showStatPopup("+10 Power", "#28a745");
   }
 };
 document.getElementById("buyPower10").onclick = function () {
@@ -61,6 +85,7 @@ document.getElementById("buyPower10").onclick = function () {
     towerStats.power += 100;
     towers.forEach(tower => tower.el.dataset.power = towerStats.power);
     updateCoins();
+    showStatPopup("+100 Power", "#28a745");
   }
 };
 document.getElementById("buyPower100").onclick = function () {
@@ -69,6 +94,7 @@ document.getElementById("buyPower100").onclick = function () {
     towerStats.power += 1000;
     towers.forEach(tower => tower.el.dataset.power = towerStats.power);
     updateCoins();
+    showStatPopup("+1000 Power", "#28a745");
   }
 };
 
@@ -78,6 +104,7 @@ document.getElementById("buyRange").onclick = function () {
     towerStats.range += 10;
     towers.forEach(tower => tower.el.dataset.range = towerStats.range);
     updateCoins();
+    showStatPopup("+10 Range", "#007bff");
   }
 };
 document.getElementById("buyRange10").onclick = function () {
@@ -86,6 +113,7 @@ document.getElementById("buyRange10").onclick = function () {
     towerStats.range += 100;
     towers.forEach(tower => tower.el.dataset.range = towerStats.range);
     updateCoins();
+    showStatPopup("+100 Range", "#007bff");
   }
 };
 document.getElementById("buyRange100").onclick = function () {
@@ -94,6 +122,7 @@ document.getElementById("buyRange100").onclick = function () {
     towerStats.range += 1000;
     towers.forEach(tower => tower.el.dataset.range = towerStats.range);
     updateCoins();
+    showStatPopup("+1000 Range", "#007bff");
   }
 };
 
@@ -104,6 +133,7 @@ document.getElementById("buySpeed").onclick = function () {
     towers.forEach(tower => tower.el.dataset.speed = towerStats.speed.toFixed(1));
     if (gameActive) restartGameInterval();
     updateCoins();
+    showStatPopup("+0.2 Speed", "#17a2b8");
   }
 };
 document.getElementById("buySpeed10").onclick = function () {
@@ -113,6 +143,7 @@ document.getElementById("buySpeed10").onclick = function () {
     towers.forEach(tower => tower.el.dataset.speed = towerStats.speed.toFixed(1));
     if (gameActive) restartGameInterval();
     updateCoins();
+    showStatPopup("+2 Speed", "#17a2b8");
   }
 };
 document.getElementById("buySpeed100").onclick = function () {
@@ -122,6 +153,7 @@ document.getElementById("buySpeed100").onclick = function () {
     towers.forEach(tower => tower.el.dataset.speed = towerStats.speed.toFixed(1));
     if (gameActive) restartGameInterval();
     updateCoins();
+    showStatPopup("+20 Speed", "#17a2b8");
   }
 };
 
@@ -131,6 +163,7 @@ document.getElementById("buyHealth").onclick = function () {
     towerBaseHealth += 20;
     towers.forEach(tower => { if (tower.health > 0) tower.health += 20; setHpBar(tower.el, tower.health, towerBaseHealth); });
     updateCoins();
+    showStatPopup("+20 Health", "#ffc107");
   }
 };
 document.getElementById("buyHealth10").onclick = function () {
@@ -139,6 +172,7 @@ document.getElementById("buyHealth10").onclick = function () {
     towerBaseHealth += 200;
     towers.forEach(tower => { if (tower.health > 0) tower.health += 200; setHpBar(tower.el, tower.health, towerBaseHealth); });
     updateCoins();
+    showStatPopup("+200 Health", "#ffc107");
   }
 };
 document.getElementById("buyHealth100").onclick = function () {
@@ -147,6 +181,7 @@ document.getElementById("buyHealth100").onclick = function () {
     towerBaseHealth += 2000;
     towers.forEach(tower => { if (tower.health > 0) tower.health += 2000; setHpBar(tower.el, tower.health, towerBaseHealth); });
     updateCoins();
+    showStatPopup("+2000 Health", "#ffc107");
   }
 };
 
