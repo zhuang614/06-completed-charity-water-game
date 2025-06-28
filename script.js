@@ -30,23 +30,8 @@ coinPanel.innerHTML = `
   <button class="btn btn-success m-1" id="buySpeed">+0.2 Tower Speed (10 coins)</button>
   <button class="btn btn-secondary m-1" id="buyHealth">+20 Community Health (10 coins)</button>
   <hr>
-  <div class="dropdown d-inline-block">
-    <button class="btn btn-outline-dark dropdown-toggle m-1" type="button" id="permDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-      Permanent Upgrades
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="permDropdown" style="min-width:260px;">
-      <li><button class="dropdown-item" id="permPower">+5 Power per Level (50 coins)</button></li>
-      <li><button class="dropdown-item" id="permSpeed">Halve Tower Speed per Level (50 coins)</button></li>
-      <li><button class="dropdown-item" id="permTowers">+3 Towers per Level (50 coins)</button></li>
-      <li><button class="dropdown-item" id="permCommunityBuff">Communities gain tower stats (50 coins)</button></li>
-      <li><button class="dropdown-item" id="permFullHP">Tower & Community HP = 100 × Level (20 coins)</button></li>
-    </ul>
-  </div>
 `;
 document.body.appendChild(coinPanel);
-
-// --- Permanent upgrade flags ---
-let permPowerActive = false, permSpeedActive = false, permTowersActive = false, permCommunityBuffActive = false, permFullHPActive = false;
 
 // --- Coin logic ---
 function updateCoins() {
@@ -85,31 +70,6 @@ document.getElementById("buyHealth").onclick = function () {
     communityBaseHealth += 20;
     communities.forEach(comm => { if (comm.alive) comm.health += 20; comm.el.dataset.health = comm.health; });
     updateCoins();
-  }
-};
-
-// --- Permanent upgrades ---
-document.getElementById("permPower").onclick = function () {
-  if (!permPowerActive && coins >= 50) { coins -= 50; permPowerActive = true; this.disabled = true; updateCoins(); }
-};
-document.getElementById("permSpeed").onclick = function () {
-  if (!permSpeedActive && coins >= 50) { coins -= 50; permSpeedActive = true; this.disabled = true; updateCoins(); }
-};
-document.getElementById("permTowers").onclick = function () {
-  if (!permTowersActive && coins >= 50) { coins -= 50; permTowersActive = true; this.disabled = true; updateCoins(); }
-};
-document.getElementById("permCommunityBuff").onclick = function () {
-  if (!permCommunityBuffActive && coins >= 50) {
-    coins -= 50; permCommunityBuffActive = true; this.disabled = true; updateCoins();
-    communities.forEach(comm => { comm.hasTowerStats = true; });
-  }
-};
-document.getElementById("permFullHP").onclick = function () {
-  if (!permFullHPActive && coins >= 20) {
-    coins -= 20; permFullHPActive = true; this.disabled = true; updateCoins();
-    towers.forEach(tower => { tower.health = 100 * level; tower.el.dataset.health = tower.health; });
-    communities.forEach(comm => { comm.health = 100 * level; comm.el.dataset.health = comm.health; });
-    towerBaseHealth = 100 * level; communityBaseHealth = 100 * level;
   }
 };
 
@@ -216,10 +176,8 @@ function createCommunity(x, y) {
   img.style.height = "40px";
   div.appendChild(img);
   let commObj = { el: div, x, y, alive: true, health: communityBaseHealth };
-  if (permCommunityBuffActive) commObj.hasTowerStats = true;
   attachTooltipFollow(div, () => {
     let html = `<strong>Community</strong><br>Health: ${commObj.health}`;
-    if (commObj.hasTowerStats) html += `<br>Power: ${towerStats.power}<br>Speed: ${towerStats.speed.toFixed(1)}<br>Range: ${towerStats.range}`;
     return html;
   });
   setHpBar(div, commObj.health, communityBaseHealth);
@@ -358,8 +316,9 @@ function updateGame() {
       const p1 = pollutants[i], p2 = pollutants[j];
       const dx = p1.x - p2.x, dy = p1.y - p2.y, dist = Math.sqrt(dx * dx + dy * dy);
       if (dist < 30) {
+        // Double the coins dropped after every merge
+        p1.coinValue = ((p1.coinValue || 5) + (p2.coinValue || 5)) * 2;
         p1.hp += p2.hp; p1.power += p2.power; p1.speed = Math.max(0.5, p1.speed / 2);
-        p1.coinValue = (p1.coinValue || 5) + (p2.coinValue || 5) + 5;
         p1.el.dataset.hp = p1.hp; p1.el.dataset.power = p1.power; p1.el.dataset.speed = p1.speed.toFixed(1);
         setHpBar(p1.el, p1.hp, p1.hp);
         if (p2.el._tooltip) { p2.el._tooltip.remove(); p2.el._tooltip = null; }
@@ -425,6 +384,8 @@ function updateGame() {
       let coinValue = pollutants[idx].coinValue || 5;
       gameArea.removeChild(pollutants[idx].el);
       pollutants.splice(idx, 1);
+      // Death of every pollutant costs 1 coin
+      coins = Math.max(0, coins - 1);
       coins += coinValue;
       scoreDisplay.innerText = score;
       updateCoins();
@@ -511,27 +472,14 @@ function startGame() {
   scoreDisplay.innerText = score;
   levelDisplay.innerText = level;
   spawnedPollutants = 0; maxPollutants = 10;
-  // Apply permanent upgrades at game start
+  // Remove permanent upgrades at game start
   towerStats = { range: 60, power: 100, speed: 1.0, health: 100 };
   communityBaseHealth = 100; towerBaseHealth = 100;
-  if (permPowerActive) towerStats.power += 5 * level;
-  if (permSpeedActive) towerStats.speed *= Math.pow(2, level - 1);
-  if (permFullHPActive) {
-    towerBaseHealth = 100 * level;
-    communityBaseHealth = 100 * level;
-  }
   communities = []; towers = []; pollutants = []; bullets = [];
   for (let i = 0; i < 3; i++) createCommunity(Math.random() * (gameArea.clientWidth - 40), Math.random() * (gameArea.clientHeight - 40));
   communities.forEach(comm => {
-    if (permCommunityBuffActive) comm.hasTowerStats = true;
     createTowerAroundCommunity(comm);
   });
-  if (permTowersActive) {
-    for (let i = 0; i < 3; i++) {
-      let comm = communities[Math.floor(Math.random() * communities.length)];
-      if (comm) createTowerAroundCommunity(comm);
-    }
-  }
   updateCoins();
   restartGameInterval();
 }
@@ -553,22 +501,7 @@ function nextLevel() {
   scoreDisplay.innerText = score;
   // Show confetti every 10 levels
   if (level % 10 === 0) showConfetti();
-  // Apply permanent upgrades at each new level
-  if (permPowerActive) towerStats.power += 5;
-  if (permSpeedActive) { towerStats.speed *= 2; if (gameActive) restartGameInterval(); }
-  if (permTowersActive) {
-    for (let i = 0; i < 3; i++) {
-      let comm = communities[Math.floor(Math.random() * communities.length)];
-      if (comm) createTowerAroundCommunity(comm);
-      else createTower(Math.random() * (gameArea.clientWidth - 30), Math.random() * (gameArea.clientHeight - 30));
-    }
-  }
-  if (permFullHPActive) {
-    towerBaseHealth = 100 * level;
-    communityBaseHealth = 100 * level;
-    towers.forEach(tower => { tower.health = towerBaseHealth; tower.el.dataset.health = tower.health; });
-    communities.forEach(comm => { comm.health = communityBaseHealth; comm.el.dataset.health = comm.health; });
-  }
+  // Remove permanent upgrades at each new level
   let comm = communities[Math.floor(Math.random() * communities.length)];
   if (comm) createTowerAroundCommunity(comm);
   else createTower(Math.random() * (gameArea.clientWidth - 30), Math.random() * (gameArea.clientHeight - 30));
@@ -576,7 +509,6 @@ function nextLevel() {
   if (level % 5 === 0) {
     createCommunity(Math.random() * (gameArea.clientWidth - 40), Math.random() * (gameArea.clientHeight - 40));
   }
-  if (permCommunityBuffActive) communities.forEach(comm => { comm.hasTowerStats = true; });
   restartGameInterval();
 }
 
@@ -784,11 +716,6 @@ document.querySelectorAll("button").forEach(btn => {
   btn.style.color = palette.black;
   btn.style.border = `2px solid ${palette.darkBlue}`;
 });
-const permDropdownBtn = document.getElementById("permDropdown");
-if (permDropdownBtn) {
-  permDropdownBtn.style.background = palette.yellow;
-  permDropdownBtn.style.color = palette.black;
-}
 const styleBrand = document.createElement("style");
 styleBrand.innerHTML = `
   .can:hover { filter: brightness(1.2) drop-shadow(0 0 8px ${palette.yellow}); }
