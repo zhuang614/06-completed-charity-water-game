@@ -640,10 +640,6 @@ function updateGame() {
       setTimeout(() => { if (autoNextLevelActive) nextLevel(); }, 800);
     }
   }
-  if (score >= winScore) {
-    endGame();
-    return;
-  }
 }
 
 // --- Game Start/End/Next Level ---
